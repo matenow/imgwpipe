@@ -38,7 +38,7 @@ def transform(trans_df):
 	return trans_df
 
 
-def getframe(year: int, month: int, station='', stationid=''):
+def getframe(year: int, month: int, stationid=int, station=str):
 	core.makedir(dirname='temp')
 
 	zipname = f'codz_{year}_{core.strnumb(month)}.zip'
@@ -52,53 +52,65 @@ def getframe(year: int, month: int, station='', stationid=''):
 		zip_ref.extractall(path='temp')
 	df = pd.read_csv(f'temp/{csvname}', encoding='windows-1250', header=None)
 	df.columns = Labels.init_cols
-	if not station == '' and not stationid == '':
-		df = df.loc[(df['station_name'] == station) & (df['station_id'] == stationid)]
+	if not stationid == int:
+		df = df.loc[df['station_id'] == stationid]
+	elif not station == str:
+		df = df.loc[df['station_name'] == station]
+
 	os.remove(f'temp/{zipname}')
 	os.remove(f'temp/{csvname}')
 	return df
 
 
-def getyear(year: int, station=''):
+def getyear(year: int, stationid=int, station=str, save=False):
 	year_df = pd.DataFrame([], columns=Labels.init_cols)
 	for month in range(1, 12+1):
-		df = getframe(year, month, station)
+		df = getframe(year, month, stationid, station)
 		year_df = year_df.append(df)
 	year_df = transform(year_df)
-	if not station == '':
-		year_df.to_csv(f'temp/hydro_daily_{year}_{station}.csv', index=False, encoding='utf-8')
-	else:
-		year_df.to_csv(f'temp/hydro_daily_{year}_all.csv', index=False, encoding='utf-8')
+	if save:
+		if not stationid == int:
+			year_df.to_csv(f'temp/hydro_daily_{year}_{stationid}.csv', index=False, encoding='utf-8')
+		elif not station == str:
+			year_df.to_csv(f'temp/hydro_daily_{year}_{station}.csv', index=False, encoding='utf-8')
+		elif stationid == int or station == str:
+			year_df.to_csv(f'temp/hydro_daily_{year}_all.csv', index=False, encoding='utf-8')
 	return year_df
 
 
-def getrange(first_year: int, last_year: int, station=''):
+def getrange(first_year: int, last_year: int, stationid=int, station=str, save=False):
 	if first_year < 1951 or last_year > 2020:
 		print('Selected years out of the available range (1951-2020).')
 	else:
 		range_df = pd.DataFrame([], columns=Labels.trans_cols)
 		for year in range(first_year, last_year + 1):
-			df = getyear(year, station)
+			df = getyear(year, stationid, station)
 			range_df = range_df.append(df, ignore_index=True).reset_index().drop('index', axis=1)
-		if not station == '':
-			range_df.to_csv(f'temp/hydro_daily_range_{first_year}-{last_year}_{station}.csv', index=False, encoding='utf-8')
-		else:
-			range_df.to_csv(f'temp/hydro_daily_range_{first_year}-{last_year}_all.csv', index=False, encoding='utf-8')
+		if save:
+			if not stationid == int:
+				range_df.to_csv(f'temp/hydro_daily_range_{first_year}-{last_year}_{stationid}.csv', index=False, encoding='utf-8')
+			elif not station == str:
+				range_df.to_csv(f'temp/hydro_daily_range_{first_year}-{last_year}_{station}.csv', index=False, encoding='utf-8')
+			elif stationid == int or station == str:
+				range_df.to_csv(f'temp/hydro_daily_range_{first_year}-{last_year}_all.csv', index=False, encoding='utf-8')
 		return range_df
 
 
-def getmonth(year: int, month: int, station=''):
-	month_df = getframe(year, month, station)
+def getmonth(year: int, month: int, stationid=int, station=str, save=False):
+	month_df = getframe(year, month, stationid, station)
 	month_df.columns = Labels.init_cols
 	month_df = transform(month_df)
-	if not station == '':
-		month_df.to_csv(f'temp/hydro_daily_{year}_{core.strnumb(month)}_{station}.csv', index=False, encoding='utf-8')
-	else:
-		month_df.to_csv(f'temp/hydro_daily_{year}_{core.strnumb(month)}_all.csv', index=False, encoding='utf-8')
+	if save:
+		if not stationid == int:
+			month_df.to_csv(f'temp/hydro_daily_{year}_{core.strnumb(month)}_{stationid}.csv', index=False, encoding='utf-8')
+		elif not station == str:
+			month_df.to_csv(f'temp/hydro_daily_{year}_{core.strnumb(month)}_{station}.csv', index=False, encoding='utf-8')
+		elif stationid == int or station == str:
+			month_df.to_csv(f'temp/hydro_daily_{year}_{core.strnumb(month)}_all.csv', index=False, encoding='utf-8')
 	return month_df
 
 
-def month_stations(year: int, month: int, csv=False) -> list:
+def month_stations(year: int, month: int) -> list:
 	return getmonth(year, month)['station_name'].sort_values().unique().tolist()
 
 
