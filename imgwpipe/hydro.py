@@ -16,14 +16,6 @@ class Labels:
 		'River/Lake name', 'River/Lake ID', 'Water level', 'Water flow', 'Water temperature']
 
 
-class Units:
-	param_unit = {
-		'Water level': 'cm',
-		'Water flow': 'm^3/s',
-		'Water temperature': 'deg C'
-	}
-
-
 def transform(trans_df):
 	trans_df = trans_df.reset_index().drop('index', axis=1)
 	dfc = trans_df.copy()
