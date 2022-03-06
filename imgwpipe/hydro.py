@@ -8,33 +8,33 @@ import requests
 
 class Labels:
 	init_cols = [
-		'Station ID', 'Station name', 'River/Lake name', 'Hydrological year', 'Hydrological month indicator', 'Day',
-		'Water level', 'Water flow', 'Water temperature', 'Month']
+		'station_id', 'station_name', 'riv_or_lake', 'hydro_y', 'hydro_month_ind', 'day',
+		'lvl', 'flow', 'temp', 'month']
 
 	trans_cols = [
-		'Date', 'Year', 'Month', 'Day', 'Hydrological year', 'Hydrological month indicator', 'Station ID', 'Station name',
-		'River/Lake name', 'River/Lake ID', 'Water level', 'Water flow', 'Water temperature']
+		'date', 'year', 'month', 'day', 'hydro_y', 'hydro_month_ind', 'station_id', 'station_name',
+		'riv_or_lake', 'riv_or_lake_id', 'lvl', 'flow', 'temp']
 
 
 def transform(trans_df):
 	trans_df = trans_df.reset_index().drop('index', axis=1)
 	dfc = trans_df.copy()
 	lstrip = 'AĄBCĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻaąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż( '
-	river_lake_id = dfc['River/Lake name'].map(lambda x: x.lstrip(lstrip).rstrip(')'))
-	trans_df['River/Lake name'] = trans_df['River/Lake name'].map(lambda x: x.rstrip(' ()1234567890 '))
-	trans_df['River/Lake ID'] = river_lake_id
+	river_lake_id = dfc['riv_or_lake'].map(lambda x: x.lstrip(lstrip).rstrip(')'))
+	trans_df['riv_or_lake'] = trans_df['riv_or_lake'].map(lambda x: x.rstrip(' ()1234567890 '))
+	trans_df['riv_or_lake_id'] = river_lake_id
 
-	trans_df['Month'] = trans_df['Month'].fillna(method='ffill').astype(int)
-	trans_df['Day'] = trans_df['Day'].fillna(method='ffill').astype(int)
+	trans_df['month'] = trans_df['month'].fillna(method='ffill').astype(int)
+	trans_df['day'] = trans_df['day'].fillna(method='ffill').astype(int)
 
-	trans_df['Year'] = trans_df['Hydrological year']
-	trans_df.loc[(trans_df['Month'] == 11) | (trans_df['Month'] == 12), 'Year'] = trans_df['Year'].astype(int) - 1
-	trans_df['Date'] = pd.to_datetime(trans_df[['Year', 'Month', 'Day']])
+	trans_df['year'] = trans_df['hydro_y']
+	trans_df.loc[(trans_df['month'] == 11) | (trans_df['month'] == 12), 'year'] = trans_df['year'].astype(int) - 1
+	trans_df['date'] = pd.to_datetime(trans_df[['year', 'month', 'day']])
 
 	trans_df = trans_df[Labels.trans_cols]
-	trans_df.loc[trans_df['Water level'] == 9999, 'Water level'] = np.nan
-	trans_df.loc[trans_df['Water flow'] == 99999.999, 'Water flow'] = np.nan
-	trans_df.loc[trans_df['Water temperature'] == 99.9, 'Water temperature'] = np.nan
+	trans_df.loc[trans_df['lvl'] == 9999, 'lvl'] = np.nan
+	trans_df.loc[trans_df['flow'] == 99999.999, 'flow'] = np.nan
+	trans_df.loc[trans_df['temp'] == 99.9, 'temp'] = np.nan
 	return trans_df
 
 
@@ -53,7 +53,7 @@ def getframe(year: int, month: int, station='', stationid=''):
 	df = pd.read_csv(f'temp/{csvname}', encoding='windows-1250', header=None)
 	df.columns = Labels.init_cols
 	if not station == '' and not stationid == '':
-		df = df.loc[(df['Station name'] == station) & (df['Station ID'] == stationid)]
+		df = df.loc[(df['station_name'] == station) & (df['station_id'] == stationid)]
 	os.remove(f'temp/{zipname}')
 	os.remove(f'temp/{csvname}')
 	return df
@@ -99,8 +99,8 @@ def getmonth(year: int, month: int, station=''):
 
 
 def month_stations(year: int, month: int, csv=False) -> list:
-	return getmonth(year, month)['Station name'].sort_values().unique().tolist()
+	return getmonth(year, month)['station_name'].sort_values().unique().tolist()
 
 
 def year_stations(year: int) -> list:
-	return getyear(year)['Station name'].sort_values().unique().tolist()
+	return getyear(year)['station_name'].sort_values().unique().tolist()
