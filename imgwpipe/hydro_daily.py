@@ -39,8 +39,8 @@ def transform(trans_df):
 
 
 def getframe(year: int, month: int, stationid=None, station=None):
-	core.makedir(dirname='temp')
 
+	core.makedir(dirname='temp')
 	zipname = f'codz_{year}_{core.strnumb(month)}.zip'
 	csvname = f'codz_{year}_{core.strnumb(month)}.csv'
 	url = f'https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_hydrologiczne/dobowe/{year}/{zipname}'
@@ -53,7 +53,7 @@ def getframe(year: int, month: int, stationid=None, station=None):
 	df = pd.read_csv(f'temp/{csvname}', encoding='windows-1250', header=None)
 	df.columns = Labels.init_cols
 	if stationid is not None:
-		df = df.loc[df['station_id'] == stationid]
+		df = df.loc[df['station_id'] == int(stationid)]
 	elif station is not None:
 		df = df.loc[df['station_name'] == station]
 
@@ -63,7 +63,10 @@ def getframe(year: int, month: int, stationid=None, station=None):
 
 
 def getyear(year: int, stationid=None, station=None, save=False):
-	if year not in range(1951, 2021):
+	err(stationid, station)
+	if not isinstance(year, int):
+		raise Exception('year argument must be an integer')
+	elif year not in range(1951, 2021):
 		raise Exception('chosen year not in available range (1951, 2020)')
 	else:
 		year_df = pd.DataFrame([], columns=Labels.init_cols)
@@ -83,7 +86,10 @@ def getyear(year: int, stationid=None, station=None, save=False):
 
 
 def getrange(first_year: int, last_year: int, stationid=None, station=None, save=False):
-	if first_year not in range(1951, 2021) or last_year not in range(1951, 2021):
+	err(stationid, station)
+	if not isinstance(first_year, int) or not isinstance(last_year, int):
+		raise Exception('first_year and last_year arguments must be integers')
+	elif first_year not in range(1951, 2021) or last_year not in range(1951, 2021):
 		raise Exception('chosen year out of available range (1951-2020)')
 	else:
 		range_df = pd.DataFrame([], columns=Labels.trans_cols)
@@ -101,11 +107,14 @@ def getrange(first_year: int, last_year: int, stationid=None, station=None, save
 		return range_df
 
 
-def getmonth(year: int, month: int, stationid=None, station=None, save=False):
-	if year not in range(1951, 2021):
-		raise Exception('chosen year not in available range (1951-2020)')
+def getmonth(year: int, month: int, stationid=None, station=None, save=False) -> object:
+	err(stationid, station)
+	if not isinstance(year, int) or not isinstance(month, int):
+		raise Exception('year and month arguments must be integers')
 	elif month not in range(1, 13):
 		raise Exception('chosen month not in range (1-12)')
+	elif year not in range(1951, 2021):
+		raise Exception('chosen year not in available range (1951-2020)')
 	else:
 		month_df = getframe(year, month, stationid, station)
 		if month_df.empty:
@@ -125,7 +134,9 @@ def getmonth(year: int, month: int, stationid=None, station=None, save=False):
 
 
 def stations(year: int, month=None) -> list:
-	if month is not None:
+	if not isinstance(year, int):
+		raise Exception('year argument must be an integer')
+	elif month is not None:
 		stations_names = getmonth(year, month)['station_name'].sort_values()
 		stations_ids = getmonth(year, month)['station_id'].sort_values()
 	else:
@@ -135,4 +146,11 @@ def stations(year: int, month=None) -> list:
 	for x, y in zip(stations_names, stations_ids):
 		stations_list.append(f'{y}, {x}')
 	return list(set(stations_list))
+
+
+def err(stationid, station):
+	if not isinstance(stationid, str) and stationid is not None:
+		raise Exception('stationid argument must be a string value')
+	elif not isinstance(station, str) and station is not None:
+		raise Exception('station argument must be a string value')
 
