@@ -153,5 +153,24 @@ def coords(stationid: int) -> list:
 	return [stationid, xcoord, ycoord]
 
 
+def stations(year: int, month=None) -> list:
+	if not isinstance(year, int):
+		raise Exception('year argument must be an integer')
+	elif not isinstance(month, int) and month is not None:
+		raise Exception('month argument must be an integer')
+	elif month not in range(1, 13) and month is not None:
+		raise Exception('month argument not in range (1-12)')
+	elif month is not None:
+		stations_names = getmonth(year, month)['station_name'].sort_values()
+		stations_ids = getmonth(year, month)['station_id'].sort_values()
+	else:
+		stations_names = getyear(year)['station_name'].sort_values()
+		stations_ids = getyear(year)['station_id'].sort_values()
+	stations_list = list()
+	for x, y in zip(stations_names, stations_ids):
+		stations_list.append(y)
+	return list(set(stations_list))
+
+
 
 
