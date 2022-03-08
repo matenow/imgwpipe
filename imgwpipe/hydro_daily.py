@@ -20,9 +20,9 @@ def transform(trans_df):
 	trans_df = trans_df.reset_index().drop('index', axis=1)
 	dfc = trans_df.copy()
 	lstrip = 'AĄBCĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻaąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż( '
-	river_lake_id = dfc['riv_or_lake'].map(lambda x: x.lstrip(lstrip).rstrip(')'))
+	rivlakeid = dfc['riv_or_lake'].map(lambda x: x.lstrip(lstrip).rstrip(')'))
 	trans_df['riv_or_lake'] = trans_df['riv_or_lake'].map(lambda x: x.rstrip(' ()1234567890 '))
-	trans_df['riv_or_lake_id'] = river_lake_id
+	trans_df['riv_or_lake_id'] = rivlakeid
 
 	trans_df['month'] = trans_df['month'].fillna(method='ffill').astype(int)
 	trans_df['day'] = trans_df['day'].fillna(method='ffill').astype(int)
@@ -82,7 +82,7 @@ def getyear(year: int, stationid=None, station=None, save=False):
 				year_df.to_csv(f'Saved/hydro_daily_{year}_{station}.csv', index=False, encoding='utf-8')
 			elif stationid is None or station is None:
 				year_df.to_csv(f'Saved/hydro_daily_{year}_all.csv', index=False, encoding='utf-8')
-		return year_df
+		return year_df.reset_index().drop('index', axis=1)
 
 
 def getrange(first_year: int, last_year: int, stationid=None, station=None, save=False):
@@ -94,8 +94,10 @@ def getrange(first_year: int, last_year: int, stationid=None, station=None, save
 	else:
 		range_df = pd.DataFrame([], columns=Labels.trans_cols)
 		for year in range(first_year, last_year + 1):
-			df = getyear(year, stationid, station)
-			range_df = range_df.append(df, ignore_index=True).reset_index().drop('index', axis=1)
+			for month in range(1, 12+1):
+				df = getframe(year, month, stationid, station)
+				range_df = range_df.append(df, ignore_index=True)
+		range_df = transform(range_df)
 		if save:
 			core.makedir('Saved')
 			if stationid is not None:
@@ -104,7 +106,7 @@ def getrange(first_year: int, last_year: int, stationid=None, station=None, save
 				range_df.to_csv(f'Saved/hydro_daily_range_{first_year}-{last_year}_{station}.csv', index=False, encoding='utf-8')
 			elif stationid is None or station is None:
 				range_df.to_csv(f'Saved/hydro_daily_range_{first_year}-{last_year}_all.csv', index=False, encoding='utf-8')
-		return range_df
+		return range_df.reset_index().drop('index', axis=1)
 
 
 def getmonth(year: int, month: int, stationid=None, station=None, save=False):
@@ -118,7 +120,7 @@ def getmonth(year: int, month: int, stationid=None, station=None, save=False):
 	else:
 		month_df = getframe(year, month, stationid, station)
 		if month_df.empty:
-			raise Exception('there is no station with chosen name or id')
+			raise Exception('there is no station with chosen name or id ')
 		else:
 			month_df.columns = Labels.init_cols
 			month_df = transform(month_df)
@@ -133,23 +135,23 @@ def getmonth(year: int, month: int, stationid=None, station=None, save=False):
 		return month_df
 
 
-def stations(year: int, month=None) -> list:
-	if not isinstance(year, int):
-		raise Exception('year argument must be an integer')
-	elif month is not None:
-		stations_names = getmonth(year, month)['station_name'].sort_values()
-		stations_ids = getmonth(year, month)['station_id'].sort_values()
-	else:
-		stations_names = getyear(year)['station_name'].sort_values()
-		stations_ids = getyear(year)['station_id'].sort_values()
-	stations_list = list()
-	for x, y in zip(stations_names, stations_ids):
-		stations_list.append(f'{y}, {x}')
-	return list(set(stations_list))
-
-
 def err(stationid, station):
-	if not isinstance(stationid, str) and stationid is not None:
-		raise Exception('stationid argument must be a string value')
+	if not isinstance(stationid, int) and stationid is not None:
+		raise Exception('stationid argument must be an integer')
 	elif not isinstance(station, str) and station is not None:
-		raise Exception('station argument must be a string value')
+		raise Exception('station argument must be a string')
+
+
+def coords(stationid: int) -> list:
+	if not isinstance(stationid, int):
+		raise Exception('stationid argument must be an integer')
+	coordinates = pd.read_csv('metadata/hydro_stations.csv', encoding='utf-8')
+	if coordinates.loc[coordinates['id'] == stationid].empty:
+		raise Exception('station with chosen id does not exist')
+	xcoord = coordinates.loc[coordinates['id'] == stationid]['X'].unique()[0]
+	ycoord = coordinates.loc[coordinates['id'] == stationid]['Y'].unique()[0]
+	return [stationid, xcoord, ycoord]
+
+
+
+
