@@ -142,15 +142,30 @@ def err(stationid, station):
 		raise Exception('station argument must be a string')
 
 
-def coords(stationid: int) -> list:
-	if not isinstance(stationid, int):
+def metadata(stationid: int, data: str) -> list:
+	if stationid is None:
+		raise Exception('missing stationid argument')
+	elif not isinstance(stationid, int) and stationid is not None:
 		raise Exception('stationid argument must be an integer')
-	coordinates = pd.read_csv('metadata/hydro_stations.csv', encoding='utf-8')
-	if coordinates.loc[coordinates['id'] == stationid].empty:
+
+	meta = pd.read_csv('metadata/hydro_stations.csv', encoding='utf-8')
+
+	if meta.loc[meta['id'] == stationid].empty:
 		raise Exception('station with chosen id does not exist')
-	xcoord = coordinates.loc[coordinates['id'] == stationid]['X'].unique()[0]
-	ycoord = coordinates.loc[coordinates['id'] == stationid]['Y'].unique()[0]
-	return [stationid, xcoord, ycoord]
+
+	if data == 'coords':
+		xcoord = meta.loc[meta['id'] == stationid]['X'].unique()[0]
+		ycoord = meta.loc[meta['id'] == stationid]['Y'].unique()[0]
+		return [xcoord, ycoord]
+	elif data == 'riv_or_lake':
+		rivlake = meta.loc[meta['id'] == stationid]['riv_or_lake'].unique()[0]
+		rivlakeid = meta.loc[meta['id'] == stationid]['riv_or_lake_id'].unique()[0]
+		return [rivlake, rivlakeid]
+	elif data == 'station_name':
+		station_name = meta.loc[meta['id'] == stationid]['name'].unique()[0]
+		return [station_name]
+	else:
+		raise Exception('unknown data argument')
 
 
 def stations(year: int, month=None) -> list:
@@ -170,7 +185,5 @@ def stations(year: int, month=None) -> list:
 	for x, y in zip(stations_names, stations_ids):
 		stations_list.append(y)
 	return list(set(stations_list))
-
-
 
 
