@@ -1,4 +1,4 @@
-# imgwpipe - The IMGW Data Pipeline
+# imgwpipe - The IMGW-PIB Data Pipeline
 The main taks of the **imgwpipe** package is to provide an easy-to-use tool in Python programming language for automatic downloading, processing, visualising and saving data provided by Polish Institute of Meteorology and Water Management - National Research Institute (IMGW-PIB). 
 
 The original datasets, publicly available as series of .csv files, are often difficult and time-consuming to clean, process and prepare toward data analysis. The purpose of this package is to simplify this process by reducing numerous queries and data filtering operations in Python to few simple and convinient functions.
