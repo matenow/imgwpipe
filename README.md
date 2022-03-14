@@ -3,10 +3,17 @@ The main taks of the **imgwpipe** package is to provide an easy-to-use tool in P
 
 The original datasets, publicly available as series of .csv files, are often difficult and time-consuming to clean, process and prepare toward data analysis. The purpose of this package is to simplify this process by reducing numerous queries and data filtering operations in Python to few simple and convinient functions.
 
-# Installation
+# Table of Contents
+1. [Instalation](#Installation)
+2. [Dependencies](#Dependencies)
+3. [Quick overview](#Quick_overview)
+4. [Detailed description](#Detailed_description)
+5. [Acknowledgement](#Acknowledgement)
+
+# Installation <a name="Installation"></a>
 To use the code, simply clone this repo. In the future, the package will be available in PyPi repository.
 
-# Dependencies
+# Dependencies <a name="Dependencies"></a>
 List of currently required Python packages and libraries for running this package:
 
 - [Requests - allows to download data directly from IMGW-PIB database.](https://docs.python-requests.org/en/latest/)
@@ -14,7 +21,7 @@ List of currently required Python packages and libraries for running this packag
 - [NumPy - used for some of minor operation for cleaning numerical data.](https://numpy.org)
 
 
-# Quick overview
+# Quick overview <a name="Quick_overview"></a>
 ## Hydrological data
 ### ```hydro_daily```
 
@@ -28,7 +35,7 @@ List of currently required Python packages and libraries for running this packag
 
 ```metadata()``` - depending on input parameters, returns stations built-in metadata, like geographic coordinates, station name or river/lake name the station is located on.
 
-# Detailed description
+# Detailed description <a name="Detailed_description"></a>
 ## Hydrological data
 ### ```hydro_daily```
 ### ```getmonth(year, month, stationid=None, station=None, save=False)``` 
@@ -130,7 +137,7 @@ One of three currently available types of metadata:
 
 ```station_name``` - name of the station 
 
-# Acknowledgement
+# Acknowledgement <a name="Acknowledgement"></a>
 Polish Institute of Meteorology and Water Management - National Research Institute [(IMGW-PIB)](https://www.imgw.pl) is the source of the data. For the purpose of running the script, data of the Institute of Meteorology and Water Management - National Research Institute have been processed.
 
 Źródłem pochodzenia danych jest Instytut Meteorologii i Gospodarki Wodnej – Państwowy Instytut Badawczy [(IMGW-PIB)](https://www.imgw.pl). Na potrzeby funkcjonowania skryptu, dane Instytutu Meteorologii i Gospodarki Wodnej – Państwowego Instytutu Badawczego zostały przetworzone.
