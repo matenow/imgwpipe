@@ -1,6 +1,5 @@
 import os
 import shutil
-import pandas as pd
 
 
 def makedir(dirname: str):
@@ -21,6 +20,3 @@ def strnumb(number: int):
 	return str_num
 
 
-def fixdate(df):
-	df['Date'] = pd.to_datetime(df['Date'])
-	return df
