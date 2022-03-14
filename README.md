@@ -8,7 +8,8 @@ The original datasets, publicly available as series of .csv files, are often dif
 2. [Dependencies](#Dependencies)
 3. [Quick overview](#Quick_overview)
 4. [Detailed description](#Detailed_description)
-5. [Acknowledgement](#Acknowledgement)
+5. [Example of use](#Example_of_use)
+6. [Acknowledgement](#Acknowledgement)
 
 # Installation <a name="Installation"></a>
 To use the code, simply clone this repo. In the future, the package will be available in PyPi repository.
@@ -136,7 +137,8 @@ One of three currently available types of metadata:
 ```riv_or_lake``` - name and ID of the river or lake on which station is located
 
 ```station_name``` - name of the station 
-
+# Example of use <a name="Example_of_use"></a>
+A simple usage example of the package is presented in [jupyter notebook](https://github.com/matenow/imgwpipe/blob/main/imgwpipe/EXAMPLE_OF_USE.ipynb)
 # Acknowledgement <a name="Acknowledgement"></a>
 Polish Institute of Meteorology and Water Management - National Research Institute [(IMGW-PIB)](https://www.imgw.pl) is the source of the data. For the purpose of running the script, data of the Institute of Meteorology and Water Management - National Research Institute have been processed.
 
