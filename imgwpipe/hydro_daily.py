@@ -186,4 +186,3 @@ def stations(year: int, month=None) -> list:
 		stations_list.append(y)
 	return list(set(stations_list))
 
-
