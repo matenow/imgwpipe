@@ -72,7 +72,7 @@ def getyear(year: int, stationid=None, station=None, save=False):
 		year_df = pd.DataFrame([], columns=Labels.init_cols)
 		for month in range(1, 12+1):
 			df = getframe(year, month, stationid, station)
-			year_df = year_df.append(df)
+			year_df = pd.concat([year_df, df], ignore_index=True)
 		year_df = transform(year_df)
 		if save:
 			core.makedir('Saved')
@@ -96,7 +96,7 @@ def getrange(first_year: int, last_year: int, stationid=None, station=None, save
 		for year in range(first_year, last_year + 1):
 			for month in range(1, 12+1):
 				df = getframe(year, month, stationid, station)
-				range_df = range_df.append(df, ignore_index=True)
+				range_df = pd.concat([range_df, df], ignore_index=True)
 		range_df = transform(range_df)
 		if save:
 			core.makedir('Saved')
