@@ -19,7 +19,7 @@ List of currently required Python packages and libraries for running this packag
 
 - [Requests - allows to download data directly from IMGW-PIB database.](https://docs.python-requests.org/en/latest/)
 - [Pandas - allows to read, transform and store tables with data in a convinient way ](https://pandas.pydata.org)
-- [NumPy - used for some of minor operation for cleaning numerical data.](https://numpy.org)
+- [NumPy - used for some operations for cleaning numerical data.](https://numpy.org)
 
 
 # Quick overview <a name="Quick_overview"></a>
