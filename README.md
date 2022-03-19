@@ -40,7 +40,7 @@ List of currently required Python packages and libraries for running this packag
 ## Hydrological data
 ### ```hydro_daily```
 ### ```getmonth(year, month, stationid=None, station=None, save=False)``` 
-Downloads daily hydrological data from danepubliczne.imgw.pl for a range of one month, and transforms it and returns as pandas DataFrame.
+Downloads daily hydrological data from danepubliczne.imgw.pl for a range of one month, transforms it and returns as pandas DataFrame.
 #### Parameters: 
 - **year : int**
 
@@ -65,7 +65,7 @@ Name of the station of interest. It is highly recommended to use **stationid** p
 If True, saves the DataFrame as a .csv file in ```/Saved``` directory.
 
 ### ```getyear(year, stationid=None, station=None, save=False)``` 
-Downloads daily hydrological data from danepubliczne.imgw.pl for a range of one year, and transforms it and returns as pandas DataFrame.
+Downloads daily hydrological data from danepubliczne.imgw.pl for a range of one year, transforms it and returns as pandas DataFrame.
 #### Parameters: 
 - **year : int**
 
@@ -85,7 +85,7 @@ Name of the station of interest. It is highly recommended to use **stationid** p
 If True, saves the DataFrame as a .csv file in ```/Saved``` directory.
 
 ### ```getrange(first_year, last_year, stationid=None, station=None, save=False)``` 
-Downloads daily hydrological data from danepubliczne.imgw.pl for a range of one year, and transforms it and returns as pandas DataFrame.
+Downloads daily hydrological data from danepubliczne.imgw.pl for a range of one year, transforms it and returns as pandas DataFrame.
 #### Parameters: 
 - **first_year : int**
 
