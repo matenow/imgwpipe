@@ -38,8 +38,7 @@ List of currently required Python packages and libraries for running this packag
 ```metadata()``` - depending on input parameters, returns stations built-in metadata, like geographic coordinates, station name or river/lake name the station is located on.
 
 # Detailed description <a name="Detailed_description"></a>
-## Hydrological data
-### ```hydro_daily```
+## ```hydro_daily```
 ### ```getmonth(year, month, stationid=None, station=None, save=False)``` 
 Downloads daily hydrological data from danepubliczne.imgw.pl for a range of one month, transforms it and returns as pandas DataFrame.
 #### Parameters: 
