@@ -19,10 +19,11 @@ List of currently required Python packages and libraries for running this packag
 
 - [Requests - allows to download data directly from IMGW-PIB database.](https://docs.python-requests.org/en/latest/)
 - [Pandas - allows to read, transform and store tables with data in a convinient way ](https://pandas.pydata.org)
-- [NumPy - used for some operations for cleaning numerical data.](https://numpy.org)
+- [NumPy - used for some operations on numerical data.](https://numpy.org)
 
 
 # Quick overview <a name="Quick_overview"></a>
+## Note: At the current stage, only the module for daily hydrological data is available. A module for monthly and annual data will be made available in the future.
 ## Hydrological data
 ### ```hydro_daily```
 
